@@ -1,25 +1,33 @@
 package domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Date;
 
 /**
  * Created by Jordy on 15-2-2017.
  */
 @Entity
 @NamedQueries({@NamedQuery(name = "", query = "")})
-public class Kweet {
+public class Kweet implements Serializable {
 
     @Id @GeneratedValue
     private Long id;
-    private User user;
+    @ManyToOne
+    private User owner;
     private String message;
+    private Date postDate;
+    @OneToMany
+    private Collection<User> likedByUsers;
 
     public Kweet() {
     }
 
-    public Kweet(User user, String message) {
-        this.user = user;
+    public Kweet(User owner, String message) {
+        this.owner = owner;
         this.message = message;
+        this.postDate = new Date();
     }
 
     public Long getId() {
@@ -30,12 +38,12 @@ public class Kweet {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public User getOwner() {
+        return owner;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     public String getMessage() {
@@ -44,5 +52,21 @@ public class Kweet {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Date getPostDate() {
+        return postDate;
+    }
+
+    public void setPostDate(Date postDate) {
+        this.postDate = postDate;
+    }
+
+    public Collection<User> getLikedByUsers() {
+        return likedByUsers;
+    }
+
+    public void setLikedByUsers(Collection<User> likedByUsers) {
+        this.likedByUsers = likedByUsers;
     }
 }
