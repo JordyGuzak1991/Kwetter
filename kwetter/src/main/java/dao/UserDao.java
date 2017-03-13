@@ -15,5 +15,5 @@ public interface UserDao {
     void followUser(@NotNull User user,@NotNull User follower);
     void unFollowUser(@NotNull User user,@NotNull User follower);
     User findUserByName(@NotNull String name);
-    Collection<User> getUsers(); 
+    Collection<User> getUsers();
 }

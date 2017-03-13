@@ -27,13 +27,13 @@ public class UserDaoColl implements UserDao {
     }
 
     public void followUser(@NotNull User user, @NotNull User follower) {
-        user.getFollowers().add(follower);
-        follower.getFollowing().add(user);
+        follower.followUser(user);
+        user.addFollower(follower);
     }
 
     public void unFollowUser(@NotNull User user, @NotNull User follower) {
-        follower.getFollowing().remove(user);
-        user.getFollowers().remove(follower);
+        follower.unfollowUser(user);
+        user.removeFollower(follower);
     }
 
     public Collection<User> getUsers() {

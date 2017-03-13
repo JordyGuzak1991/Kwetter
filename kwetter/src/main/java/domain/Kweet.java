@@ -2,6 +2,7 @@ package domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -9,7 +10,6 @@ import java.util.Date;
  * Created by Jordy on 15-2-2017.
  */
 @Entity
-@NamedQueries({@NamedQuery(name = "", query = "")})
 public class Kweet implements Serializable {
 
     @Id @GeneratedValue
@@ -18,7 +18,10 @@ public class Kweet implements Serializable {
     private User owner;
     private String message;
     private Date postDate;
-    @OneToMany
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @JoinTable(name = "KWEETS_LIKES",
+            joinColumns = @JoinColumn(name = "KWETTER_ID", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "id"))
     private Collection<User> likedByUsers;
 
     public Kweet() {
@@ -28,6 +31,7 @@ public class Kweet implements Serializable {
         this.owner = owner;
         this.message = message;
         this.postDate = new Date();
+        this.likedByUsers = new ArrayList<User>();
     }
 
     public Long getId() {

@@ -1,9 +1,11 @@
 package service;
 
+import dao.JPA;
 import dao.UserDao;
 import domain.Kweet;
 import domain.User;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.enterprise.inject.Default;
 import javax.inject.Inject;
@@ -16,14 +18,16 @@ import java.util.Collection;
 public class UserService {
 
     @Inject
-    @Default
+    @JPA
     private UserDao userDao;
 
     public UserService(){}
 
+    @RolesAllowed(value = "")
     public void addUser(User user) {
         userDao.addUser(user);
     }
+
 
     public void removeUser(User user) {
         userDao.removeUser(user);

@@ -4,10 +4,8 @@ import domain.User;
 import service.UserService;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 import java.util.Collection;
 
 /**
@@ -31,4 +29,30 @@ public class UserResource {
     public User getUserByName(@PathParam("name") String name) {
         return service.findUserByName(name);
     }
+
+    @POST
+    @Path("create")
+    @Consumes("application/json")
+    public Response createUser(User user) {
+        try {
+            service.addUser(user);
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.serverError().entity(e).build();
+        }
+    }
+
+    @POST
+    @Path("remove")
+    @Consumes("text/plain")
+    public Response removeUser(String name) {
+        try {
+            User user = service.findUserByName(name);
+            service.removeUser(user);
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.serverError().entity(e).build();
+        }
+    }
+
 }

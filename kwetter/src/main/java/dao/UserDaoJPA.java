@@ -17,29 +17,34 @@ import java.util.List;
 @Stateless @JPA
 public class UserDaoJPA extends DaoFacade<User> implements UserDao {
 
-    //@PersistenceContext(unitName = "kwetter-pu")
+    @PersistenceContext(unitName = "kwetter-pu")
     private EntityManager em;
 
-    private UserDaoJPA(){ super(User.class); }
+    public UserDaoJPA(){ super(User.class); }
 
-    public void addUser(User user) {
 
+    public void addUser(@NotNull User user) {
+        create(user);
     }
 
-    public void removeUser(User user) {
-
+    public void removeUser(@NotNull User user) {
+        User u = em.merge(user);
+        u.clearGroups();
+        remove(user);
     }
 
-    public void followUser(User user, User follower) {
-
+    public void followUser(@NotNull User user, @NotNull User follower) {
+        follower.followUser(user);
+        user.addFollower(follower);
+        edit(follower);
+        edit(user);
     }
 
-    public void unFollowUser(User user, User follower) {
-
-    }
-
-    public Collection<User> getUsers() {
-        return null;
+    public void unFollowUser(@NotNull User user, @NotNull User follower) {
+        follower.unfollowUser(user);
+        user.removeFollower(follower);
+        edit(follower);
+        edit(user);
     }
 
     public User findUserByName(String name) {
@@ -47,6 +52,10 @@ public class UserDaoJPA extends DaoFacade<User> implements UserDao {
         query.setParameter("name", name);
         List<User> result = query.getResultList();
         return result.get(0);
+    }
+
+    public Collection<User> getUsers() {
+        return null;
     }
 
     protected EntityManager getEntityManager() {
